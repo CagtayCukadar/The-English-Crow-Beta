@@ -1,4 +1,4 @@
-# The English Crow 🦅
+# The English Crow 🦅 FOR TURKISH USERS - BETA , STILL IMPROVING
 
 **The English Crow** is a modern, interactive vocabulary learning application designed to master the Oxford 3000™ and 5000™ word lists. It takes learners from **A1 to C2** levels with a sleek, gamified interface.
 
@@ -42,3 +42,4 @@ cd english-crow
 ## 📄 License
 
 This project is open source and available under the [MIT License](LICENSE).
+

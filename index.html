@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>English Master</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+
+    <!-- HEADER (YouTube Style) -->
+    <header class="app-header">
+        <div class="logo-area">
+
+            <!-- Spacer for layout -->
+            <div class="logo-spacer" style="width: 150px;"></div>
+        </div>
+
+        <div class="user-area">
+            <!-- Cleaned up per user request -->
+        </div>
+    </header>
+
+    <!-- GLOBAL LOGO OVERLAY (Fixes blending across header/sidebar boundary) -->
+    <div id="logo-overlay" style="
+        position: fixed; 
+        top: 0; 
+        left: 60px; 
+        z-index: 1000; 
+        pointer-events: none;
+        mix-blend-mode: screen; /* Blends with BOTH header and sidebar */
+        width: 250px;
+        height: 120px;
+        display: flex;
+        align-items: flex-start;
+    ">
+        <img src="img/logo.png" alt="English Crow" style="
+            height: 140px; 
+            margin-top: -15px;
+            filter: drop-shadow(0 0 5px rgba(0,0,0,0.5));
+        ">
+        <span class="beta-badge" style="
+            background: #ff0000; 
+            color: white; 
+            font-size: 10px; 
+            font-weight: 900; 
+            padding: 2px 4px; 
+            border-radius: 2px; 
+            font-family: 'Roboto', sans-serif;
+            letter-spacing: 0.5px;
+            margin-top: 25px;
+            margin-left: -20px; /* Overlap slightly */
+            box-shadow: 0 2px 5px rgba(0,0,0,0.5);
+            z-index: 1001;
+        ">BETA</span>
+    </div>
+
+
+
+    <div class="user-area">
+        <!-- Cleaned up per user request -->
+    </div>
+
+    <!-- SIDEBAR -->
+    <aside class="app-sidebar">
+        <div class="nav-item active" onclick="app.nav('home')">
+            <span class="nav-icon">📚</span> Levels
+        </div>
+
+        <hr style="border:0; border-top:1px solid #3f3f3f; margin: 12px 0;">
+
+        <div class="nav-item" onclick="app.filterFavorites()">
+            <span class="nav-icon">⭐</span> Favorites
+        </div>
+    </aside>
+
+    <!-- SETTINGS MODAL -->
+    <div id="settings-modal" class="modal hidden"
+        style="position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.8); z-index:1000; display:flex; justify-content:center; align-items:center;">
+        <div
+            style="background:#1f1f1f; padding:30px; border-radius:12px; width:400px; max-width:90%; color:white; border:1px solid #333;">
+            <h2 style="margin-top:0;">Voice Settings 🎙️</h2>
+            <p style="color:#aaa; font-size:14px; margin-bottom:20px;">Select a specific English voice to fix
+                pronunciation issues.</p>
+
+            <label style="display:block; margin-bottom:8px; font-weight:bold;">Preferred English Voice:</label>
+            <select id="voice-select"
+                style="width:100%; padding:10px; background:#333; color:white; border:1px solid #444; border-radius:6px; margin-bottom:20px;">
+                <option value="">Loading voices...</option>
+            </select>
+
+            <div style="display:flex; justify-content:flex-end; gap:10px;">
+                <button onclick="app.testVoice()"
+                    style="padding:8px 16px; background:#444; color:white; border:none; border-radius:6px; cursor:pointer;">Test
+                    🔊</button>
+                <button onclick="app.closeSettings()"
+                    style="padding:8px 16px; background:var(--primary); color:white; border:none; border-radius:6px; cursor:pointer;">Save
+                    & Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- CONTENT -->
+    <main class="main-content" id="app-content">
+
+        <!-- VIEW: HOME -->
+        <section id="view-home" class="view active">
+
+            <!-- Tags -->
+
+            <div class="sets-grid" id="sets-grid">
+                <!-- JS Injected -->
+            </div>
+        </section>
+
+        <!-- VIEW: LEVEL DETAILS (Sub-sets) -->
+        <section id="view-level" class="view hidden">
+            <div class="level-header" style="margin-bottom: 30px; display:flex; align-items:center; gap:20px;">
+                <button onclick="app.nav('home')"
+                    style="background:none; border:none; color:white; font-size:24px; cursor:pointer;">←</button>
+                <div>
+                    <h1 id="level-title" style="font-size: 32px; margin:0;">Level A1</h1>
+                    <div id="level-desc" style="color:#aaa;">Select a part to study (25 words each)</div>
+                </div>
+            </div>
+            <div class="sets-grid" id="subsets-grid">
+                <!-- JS Injected Parts -->
+            </div>
+        </section>
+
+        <!-- VIEW: CREATE -->
+        <section id="view-create" class="view hidden">
+            <div style="max-width:800px; margin:0 auto;">
+                <h2>Create New Set</h2>
+                <div class="game-card" style="background:#1f1f1f; padding:20px; border-radius:12px;">
+                    <input type="text" id="set-title" placeholder="Title (e.g. Phrasal Verbs)">
+                    <textarea id="set-desc" placeholder="Description..."></textarea>
+
+                    <div id="cards-editor"></div>
+
+                    <div style="display:flex; justify-content:space-between; margin-top:20px;">
+                        <button class="btn-create" onclick="app.addCardRow()">+ Add Row</button>
+                        <button class="btn-create" style="background:var(--primary); color:white;"
+                            onclick="app.saveSet()">Save & Publish</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- VIEW: STUDY -->
+        <section id="view-study" class="view hidden">
+            <div class="study-container">
+
+                <!-- Top Overlay Bar -->
+                <div class="study-top-bar">
+                    <button onclick="app.nav('home')" class="btn-back">
+                        <span>←</span> Back to Browse
+                    </button>
+                    <div style="text-align:right;">
+                        <h1 id="study-title" style="font-size:24px; margin:0; font-weight:bold;">Title</h1>
+                        <div id="fc-progress" style="font-size:14px; color:#aaa; margin-top:4px;">1 / 10</div>
+                    </div>
+                </div>
+
+                <!-- Floating Navigation Controls (Side Arrows) -->
+                <div class="controls">
+                    <button onclick="app.prevCard()" class="btn-nav">❮</button>
+                    <button onclick="app.nextCard()" class="btn-nav">❯</button>
+                </div>
+
+                <!-- Main Study Area -->
+                <div class="study-content"
+                    style="width:100%; height:100%; display:flex; flex-direction:column; align-items:center; justify-content:center;">
+
+                    <!-- Flashcard Mode -->
+                    <div id="mode-flashcards" class="study-mode">
+                        <div class="flashcard" onclick="app.flipCard()">
+                            <div class="fc-face front">
+                                <span id="fc-front">Term</span>
+                                <!-- STAR BUTTON -->
+                                <button id="btn-star" onclick="app.toggleStar(event)" class="btn-star">★</button>
+                                <button onclick="app.speak('front', event)" class="btn-speak"
+                                    style="position:absolute; bottom:30px; right:30px; width:60px; height:60px; font-size:28px;">🔊</button>
+                            </div>
+                            <div class="fc-face back">
+                                <span id="fc-back">Def</span>
+                                <button onclick="app.speak('back', event)" class="btn-speak"
+                                    style="position:absolute; bottom:30px; right:30px; width:60px; height:60px; font-size:28px;">🔊</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Match Mode -->
+                    <div id="mode-match" class="study-mode hidden">
+                        <div style="font-size:24px; margin-bottom:20px; color:#aaa;">Match the items quickly!</div>
+                        <div id="match-timer"
+                            style="font-size:32px; font-weight:bold; color:#e50914; margin-bottom:20px;">0.0s</div>
+                        <div id="match-grid" class="match-grid"></div>
+                    </div>
+
+                    <!-- Quiz Mode -->
+                    <div id="mode-quiz" class="study-mode hidden">
+                        <div class="quiz-container">
+                            <div style="font-size:18px; color:#aaa; margin-bottom:20px;">
+                                Question <span id="quiz-progress">1/10</span>
+                            </div>
+
+                            <div id="quiz-question"
+                                style="font-size:48px; font-weight:bold; margin-bottom:40px; text-shadow:0 2px 10px rgba(0,0,0,0.5);">
+                                ...</div>
+
+                            <div id="quiz-options" style="display:grid; grid-template-columns: 1fr 1fr; gap:15px;">
+                            </div>
+
+                            <div id="quiz-result" style="margin-top:30px; font-size:24px; min-height:36px;"></div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Bottom Left Tabs -->
+
+
+            </div>
+        </section>
+
+    </main>
+
+    <script src="js/oxford.js"></script>
+    <script src="js/app.js"></script>
+</body>
+
+</html>
